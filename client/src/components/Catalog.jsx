@@ -6,7 +6,7 @@ const Catalog = () => {
   const borrowed = [
     {
       id: 1,
-      username: "Muhammad Zeeshan Khan",
+      username: "ashutosh patil",
       email: "codewithzeeshul12@gmail.com",
       price: 10,
       dueDate: "26-02-2025",
@@ -45,7 +45,7 @@ const Catalog = () => {
   const overdue = [
     {
       id: 1,
-      username: "Muhammad Zeeshan Khan",
+      username: "ashutosh patil",
       email: "mendeveloper@gmail.com",
       price: 10,
       dueDate: "17-02-2025",
@@ -54,7 +54,7 @@ const Catalog = () => {
     },
     {
       id: 2,
-      username: "Muhammad Zeeshan Khan",
+      username: "ashutosh patil",
       email: "mendeveloper@gmail.com",
       price: 10,
       dueDate: "09-02-2025",

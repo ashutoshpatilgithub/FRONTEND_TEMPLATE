@@ -5,6 +5,8 @@ import ForgotPassword from "./pages/ForgotPassword.jsx";
 import OTP from "./pages/OTP.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   return (
@@ -18,6 +20,7 @@ const App = () => {
         <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
+      <ToastContainer position="top-right" />
     </BrowserRouter>
   );
 };

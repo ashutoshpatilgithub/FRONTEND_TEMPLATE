@@ -13,7 +13,7 @@ import ReadBookPopup from "../popups/ReadBookPopup.jsx";
 import RecordBookPopup from "../popups/RecordBookPopup.jsx";
 
 const ADMIN = {
-  name: "Muhammad Zeeshan Khan",
+  name: "ashutosh patil",
   role: "Admin",
 };
 

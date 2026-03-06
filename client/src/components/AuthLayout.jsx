@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import logo from "../assets/white-logo.png";
+import dotLogo from "../assets/black-logo.png";
 
 export default function AuthLayout({
   title,
@@ -41,6 +42,7 @@ export default function AuthLayout({
               <h1 className="text-center text-xl font-semibold tracking-tight">
                 {title}
               </h1>
+              <img src={dotLogo} alt="logo" className="h-5 w-5" />
             </div>
             {subtitle ? (
               <p className="mt-2 text-center text-xs text-slate-500">

@@ -2,7 +2,7 @@ const Users = () => {
   const rows = [
     {
       id: 1,
-      name: "Muhammad Zeeshan Khan",
+      name: "ashutosh patil",
       email: "mendeveloper@gmail.com",
       role: "User",
       borrowed: 2,
@@ -58,7 +58,7 @@ const Users = () => {
     },
     {
       id: 8,
-      name: "Muhammad Zeeshan Khan",
+      name: "ashutosh patil",
       email: "mendeveloper@gmail.com",
       role: "User",
       borrowed: 0,

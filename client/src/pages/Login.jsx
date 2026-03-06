@@ -1,7 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../components/AuthLayout.jsx";
 
 const Login = () => {
+  const navigate = useNavigate();
   return (
     <AuthLayout
       title="Sign In"
@@ -26,6 +27,7 @@ const Login = () => {
 
         <button
           type="button"
+          onClick={() => navigate("/dashboard")}
           className="mt-2 h-10 w-full rounded bg-black text-xs font-semibold tracking-[0.18em] text-white"
         >
           SIGN IN

@@ -112,7 +112,7 @@ const AdminDashboard = () => {
               alt="admin"
               className="mx-auto h-16 w-16 rounded-full object-contain"
             />
-            <div className="mt-3 text-sm font-semibold">Muhammad Zeeshan Khan</div>
+            <div className="mt-3 text-sm font-semibold">ashutosh patil</div>
             <p className="mt-2 text-xs text-slate-500">
               Welcome to your admin dashboard. Here you can manage all the
               settings and monitor the statistics.

@@ -111,7 +111,7 @@ const UserDashboard = () => {
               alt="logo"
               className="mx-auto h-16 w-auto"
             />
-            <div className="mt-3 text-sm font-semibold">Muhammad Zeeshan Khan</div>
+            <div className="mt-3 text-sm font-semibold">ashutosh patil</div>
             <p className="mt-2 text-xs text-slate-500">
               Welcome to your user dashboard. Here you can browse books and
               monitor your activity.
