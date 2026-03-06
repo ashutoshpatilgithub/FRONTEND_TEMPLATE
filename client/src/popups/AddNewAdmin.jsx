@@ -37,7 +37,7 @@ const AddNewAdmin = ({ onClose }) => {
             <input
               className="mt-1 h-9 w-full rounded border border-slate-300 px-3 text-sm outline-none focus:border-slate-400"
               type="text"
-              placeholder="Muhammad Adnan"
+              placeholder="ashutosh patil"
             />
           </div>
           <div>
