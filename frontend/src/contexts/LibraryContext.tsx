@@ -4,7 +4,6 @@ import { fetchBooks, addBook as addBookAction, deleteBook as deleteBookAction } 
 import { fetchAdminBorrowedBooks, fetchMyBorrowedBooks, recordBorrowedBook, returnBorrowedBook } from '@/store/slices/borrowSlice.js';
 import { fetchAllUsers } from '@/store/slices/userSlice.js';
 import { Book, BorrowedBook, UserProfile, Notification } from '@/types';
-import { io } from "socket.io-client";
 
 interface LibraryContextType {
     books: Book[];
@@ -104,31 +103,6 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
         }
     }, [dispatch, authState?.isAuthenticated, authState?.user?.role]);
 
-    // Setup Socket.io client for real-time updates
-    useEffect(() => {
-        if (!authState?.isAuthenticated) return;
-
-        const socketUrl = import.meta.env.VITE_API_URL.replace('/api', '');
-        const socket = io(socketUrl, {
-            withCredentials: true,
-        });
-
-        socket.on('books_updated', () => {
-            dispatch(fetchBooks());
-        });
-
-        socket.on('borrows_updated', () => {
-            if (authState?.user?.role === 'Admin') {
-                dispatch(fetchAdminBorrowedBooks());
-            } else {
-                dispatch(fetchMyBorrowedBooks());
-            }
-        });
-
-        return () => {
-            socket.disconnect();
-        };
-    }, [dispatch, authState?.isAuthenticated, authState?.user?.role]);
 
     const books: Book[] = (bookState?.books || []).map(mapBook);
     const borrowedBooks: BorrowedBook[] = (

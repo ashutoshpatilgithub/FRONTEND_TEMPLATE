@@ -1,6 +1,5 @@
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import ErrorHandler from "../middlewares/errorMiddlewares.js";
-import { getIO } from "../lib/socket.js";
 import { prisma } from "../lib/prisma.js";
 import { calculateFine } from "../utils/fineCalculator.js";
 
@@ -55,9 +54,6 @@ export const recordBorrowedBook = catchAsyncErrors(async (req, res, next) => {
         },
     });
 
-    getIO().emit("borrows_updated");
-    getIO().emit("books_updated");
-
     res.status(200).json({
         success: true,
         message: "Borrowed book recorded successfully.",
@@ -108,9 +104,6 @@ export const returnBorrowBook = catchAsyncErrors(async (req, res, next) => {
             availability: true,
         },
     });
-
-    getIO().emit("borrows_updated");
-    getIO().emit("books_updated");
 
     res.status(200).json({
         success: true,

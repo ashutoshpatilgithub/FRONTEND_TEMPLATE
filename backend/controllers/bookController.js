@@ -1,7 +1,6 @@
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import { prisma } from "../lib/prisma.js";
 import ErrorHandler from "../middlewares/errorMiddlewares.js";
-import { getIO } from "../lib/socket.js";
 
 export const addBook = catchAsyncErrors(async (req, res, next) => {
   const { title, author, description, price, quantity, genre, cover_url } = req.body;
@@ -21,8 +20,6 @@ export const addBook = catchAsyncErrors(async (req, res, next) => {
       coverUrl: cover_url || null,
     },
   });
-
-  getIO().emit("books_updated");
 
   res.status(201).json({
     success: true,
@@ -49,8 +46,6 @@ export const deleteBook = catchAsyncErrors(async (req, res, next) => {
   }
 
   await prisma.book.delete({ where: { id } });
-
-  getIO().emit("books_updated");
 
   res.status(200).json({
     success: true,
