@@ -1,16 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-
-const API_URL = import.meta.env.VITE_API_URL;
+import api from "../api.js";
 
 export const recordBorrowedBook = createAsyncThunk(
     "borrow/recordBorrowedBook",
     async (/** @type {any} */ { id, email, customDueDate, customPrice }, { rejectWithValue }) => {
         try {
-            const response = await axios.post(
-                `${API_URL}/borrow/record-borrow-book/${id}`,
-                { email, customDueDate, customPrice },
-                { headers: { "Content-Type": "application/json" }, withCredentials: true }
+            const response = await api.post(
+                `/borrow/record-borrow-book/${id}`,
+                { email, customDueDate, customPrice }
             );
             return response.data;
         } catch (error) {
@@ -23,10 +20,9 @@ export const returnBorrowedBook = createAsyncThunk(
     "borrow/returnBorrowedBook",
     async (/** @type {any} */ { id, email }, { rejectWithValue }) => {
         try {
-            const response = await axios.put(
-                `${API_URL}/borrow/return-borrowed-book/${id}`,
-                { email },
-                { headers: { "Content-Type": "application/json" }, withCredentials: true }
+            const response = await api.put(
+                `/borrow/return-borrowed-book/${id}`,
+                { email }
             );
             return response.data;
         } catch (error) {
@@ -39,9 +35,7 @@ export const fetchMyBorrowedBooks = createAsyncThunk(
     "borrow/fetchMyBorrowedBooks",
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`${API_URL}/borrow/my-borrowed-books`, {
-                withCredentials: true,
-            });
+            const response = await api.get("/borrow/my-borrowed-books");
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || "Failed to fetch borrowed books");
@@ -53,9 +47,7 @@ export const fetchAdminBorrowedBooks = createAsyncThunk(
     "borrow/fetchAdminBorrowedBooks",
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`${API_URL}/borrow/borrowed-books-by-users`, {
-                withCredentials: true,
-            });
+            const response = await api.get("/borrow/borrowed-books-by-users");
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || "Failed to fetch admin borrow data");

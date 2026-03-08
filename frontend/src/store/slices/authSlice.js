@@ -1,16 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-
-const API_URL = import.meta.env.VITE_API_URL;
+import api, { setToken, clearToken } from "../api.js";
 
 export const login = createAsyncThunk(
     "auth/login",
     async (userData, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`${API_URL}/auth/login`, userData, {
-                headers: { "Content-Type": "application/json" },
-                withCredentials: true,
-            });
+            const response = await api.post("/auth/login", userData);
+            // Save token to localStorage for persistence across refreshes
+            if (response.data.token) {
+                setToken(response.data.token);
+            }
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data.message || "Login failed");
@@ -22,10 +21,10 @@ export const register = createAsyncThunk(
     "auth/register",
     async (userData, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`${API_URL}/auth/register`, userData, {
-                headers: { "Content-Type": "application/json" },
-                withCredentials: true,
-            });
+            const response = await api.post("/auth/register", userData);
+            if (response.data.token) {
+                setToken(response.data.token);
+            }
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data.message || "Registration failed");
@@ -37,11 +36,13 @@ export const logout = createAsyncThunk(
     "auth/logout",
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`${API_URL}/auth/logout`, {
-                withCredentials: true,
-            });
+            const response = await api.get("/auth/logout");
+            // Clear token from localStorage
+            clearToken();
             return response.data;
         } catch (error) {
+            // Clear token even if the request fails
+            clearToken();
             return rejectWithValue(error.response.data.message || "Logout failed");
         }
     }
@@ -51,9 +52,7 @@ export const fetchUser = createAsyncThunk(
     "auth/fetchUser",
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`${API_URL}/auth/me`, {
-                withCredentials: true,
-            });
+            const response = await api.get("/auth/me");
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || "Session expired");

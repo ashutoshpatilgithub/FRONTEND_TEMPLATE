@@ -1,15 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-
-const API_URL = import.meta.env.VITE_API_URL;
+import api from "../api.js";
 
 export const fetchBooks = createAsyncThunk(
     "book/fetchBooks",
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`${API_URL}/book/all`, {
-                withCredentials: true,
-            });
+            const response = await api.get("/book/all");
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || "Failed to fetch books");
@@ -21,10 +17,7 @@ export const addBook = createAsyncThunk(
     "book/addBook",
     async (/** @type {any} */ bookData, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`${API_URL}/book/admin/add`, bookData, {
-                headers: { "Content-Type": "application/json" },
-                withCredentials: true,
-            });
+            const response = await api.post("/book/admin/add", bookData);
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || "Failed to add book");
@@ -36,9 +29,7 @@ export const deleteBook = createAsyncThunk(
     "book/deleteBook",
     async (/** @type {any} */ id, { rejectWithValue }) => {
         try {
-            const response = await axios.delete(`${API_URL}/book/delete/${id}`, {
-                withCredentials: true,
-            });
+            const response = await api.delete(`/book/delete/${id}`);
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || "Failed to delete book");
