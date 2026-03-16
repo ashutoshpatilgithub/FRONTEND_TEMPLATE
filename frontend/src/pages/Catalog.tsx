@@ -100,7 +100,7 @@ const Catalog = () => {
                 </h3>
                 <p className="text-xs text-muted-foreground">{book.author}</p>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-bold text-foreground">${book.price.toFixed(2)}</span>
+                  <span className="text-sm font-bold text-foreground">₹{book.price.toFixed(2)}</span>
                   <Badge variant={book.available ? 'default' : 'destructive'} className={book.available ? 'bg-primary/10 text-foreground border border-border text-xs' : 'text-xs'}>
                     {book.available ? `${book.quantity} left` : 'Unavailable'}
                   </Badge>

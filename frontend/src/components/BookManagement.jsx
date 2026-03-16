@@ -12,7 +12,7 @@ const BookManagement = ({ onAddBook, onReadBook, onRecordBook }) => {
       name: "The Silent Patient",
       author: "Alex Michaelides",
       quantity: 10,
-      price: "$3.99",
+      price: "₹99",
       availability: "Available",
     },
     {
@@ -20,7 +20,7 @@ const BookManagement = ({ onAddBook, onReadBook, onRecordBook }) => {
       name: "Atomic Habits",
       author: "James Clear",
       quantity: 5,
-      price: "$4.49",
+      price: "₹149",
       availability: "Available",
     },
     {
@@ -28,7 +28,7 @@ const BookManagement = ({ onAddBook, onReadBook, onRecordBook }) => {
       name: "The Midnight Library",
       author: "Matt Haig",
       quantity: 12,
-      price: "$3.99",
+      price: "₹99",
       availability: "Available",
     },
     {
@@ -36,7 +36,7 @@ const BookManagement = ({ onAddBook, onReadBook, onRecordBook }) => {
       name: "The Alchemist",
       author: "Paulo Coelho",
       quantity: 19,
-      price: "$2.49",
+      price: "₹79",
       availability: "Available",
     },
     {
@@ -44,7 +44,7 @@ const BookManagement = ({ onAddBook, onReadBook, onRecordBook }) => {
       name: "Project Hail Mary",
       author: "Andy Weir",
       quantity: 14,
-      price: "$5",
+      price: "₹149",
       availability: "Available",
     },
     {
@@ -52,7 +52,7 @@ const BookManagement = ({ onAddBook, onReadBook, onRecordBook }) => {
       name: "Educated",
       author: "Tara Westover",
       quantity: 2,
-      price: "$4.29",
+      price: "₹129",
       availability: "Available",
     },
     {
@@ -60,7 +60,7 @@ const BookManagement = ({ onAddBook, onReadBook, onRecordBook }) => {
       name: "The Subtle Art of Not Giving a F*ck",
       author: "Mark Manson",
       quantity: 99,
-      price: "$3.3",
+      price: "₹99",
       availability: "Available",
     },
     {
@@ -68,7 +68,7 @@ const BookManagement = ({ onAddBook, onReadBook, onRecordBook }) => {
       name: "Where the Crawdads Sing",
       author: "Delia Owens",
       quantity: 32,
-      price: "$3.29",
+      price: "₹99",
       availability: "Available",
     },
     {
@@ -76,7 +76,7 @@ const BookManagement = ({ onAddBook, onReadBook, onRecordBook }) => {
       name: "The Psychology of Money",
       author: "Morgan Housel",
       quantity: 19,
-      price: "$2.49",
+      price: "₹79",
       availability: "Available",
     },
     {
@@ -84,7 +84,7 @@ const BookManagement = ({ onAddBook, onReadBook, onRecordBook }) => {
       name: "The 5 AM Club",
       author: "Robin Sharma",
       quantity: 43,
-      price: "$3.7",
+      price: "₹109",
       availability: "Available",
     },
   ];

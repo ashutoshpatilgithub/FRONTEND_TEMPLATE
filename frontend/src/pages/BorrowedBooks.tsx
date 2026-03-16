@@ -136,7 +136,7 @@ const BorrowedBooks = () => {
                   <TableCell>{borrow.borrower_name}</TableCell>
                   <TableCell>{borrow.borrower_email}</TableCell>
                   <TableCell className="font-medium">{borrow.book_title}</TableCell>
-                  <TableCell>${borrow.price.toFixed(2)}</TableCell>
+                  <TableCell>₹{borrow.price.toFixed(2)}</TableCell>
                   <TableCell className={overdue ? 'text-destructive font-bold' : ''}>
                     {formatDate(borrow.due_date)}
                     {overdue && <Badge variant="destructive" className="ml-2 text-[10px] px-1.5 leading-none">OVERDUE</Badge>}
@@ -210,7 +210,7 @@ const BorrowedBooks = () => {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Rent Price ($)</Label>
+                <Label>Rent Price (₹)</Label>
                 <Input type="number" step="0.01" min="0" placeholder="0.00" value={rentPrice} onChange={(e) => setRentPrice(e.target.value)} />
               </div>
               <div className="space-y-2">

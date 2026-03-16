@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLibrary } from '@/contexts/LibraryContext';
 import { Navigate } from 'react-router-dom';
@@ -19,7 +19,7 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Plus, BookOpen, FileEdit, Search, Trash2, ImagePlus } from 'lucide-react';
+import { Plus, BookOpen, FileEdit, Search, Trash2, Link } from 'lucide-react';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { BOOK_CATEGORIES } from '@/types';
@@ -35,10 +35,6 @@ const Books = () => {
 
   const [newBook, setNewBook] = useState({ title: '', author: '', price: '', quantity: '', description: '', genre: '', cover_url: '' });
   const [recordForm, setRecordForm] = useState({ title: '', author: '', price: '', quantity: '', description: '', genre: '', cover_url: '' });
-  const [previewImg, setPreviewImg] = useState<string | null>(null);
-  const [recordPreviewImg, setRecordPreviewImg] = useState<string | null>(null);
-  const fileRef = useRef<HTMLInputElement>(null);
-  const recordFileRef = useRef<HTMLInputElement>(null);
 
   if (user?.role !== 'librarian') {
     return <Navigate to="/catalog" replace />;
@@ -47,22 +43,7 @@ const Books = () => {
   const filteredBooks = searchQuery ? searchBooks(searchQuery) : books;
   const viewBook = showViewBook ? books.find(b => b.id === showViewBook) : null;
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, target: 'add' | 'record') => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const url = reader.result as string;
-      if (target === 'add') {
-        setNewBook(p => ({ ...p, cover_url: url }));
-        setPreviewImg(url);
-      } else {
-        setRecordForm(p => ({ ...p, cover_url: url }));
-        setRecordPreviewImg(url);
-      }
-    };
-    reader.readAsDataURL(file);
-  };
+
 
   const handleAddBook = () => {
     if (!newBook.title || !newBook.author || !newBook.price || !newBook.quantity) {
@@ -80,7 +61,6 @@ const Books = () => {
     });
     toast.success('Book added successfully!');
     setNewBook({ title: '', author: '', price: '', quantity: '', description: '', genre: '', cover_url: '' });
-    setPreviewImg(null);
     setShowAddBook(false);
   };
 
@@ -100,7 +80,6 @@ const Books = () => {
     });
     toast.success('Book recorded successfully!');
     setRecordForm({ title: '', author: '', price: '', quantity: '', description: '', genre: '', cover_url: '' });
-    setRecordPreviewImg(null);
     setShowRecordBook(false);
   };
 
@@ -165,7 +144,7 @@ const Books = () => {
                   {book.genre && <Badge variant="outline" className="text-xs">{book.genre}</Badge>}
                 </TableCell>
                 <TableCell>{book.quantity}</TableCell>
-                <TableCell>${book.price.toFixed(2)}</TableCell>
+                <TableCell>₹{book.price.toFixed(2)}</TableCell>
                 <TableCell>
                   <Badge variant={book.available ? 'default' : 'destructive'} className={book.available ? 'bg-primary/10 text-foreground border border-border' : ''}>
                     {book.available ? 'Available' : 'Unavailable'}
@@ -183,7 +162,6 @@ const Books = () => {
                           quantity: String(book.quantity), description: book.description,
                           genre: book.genre || '', cover_url: book.cover_url || '',
                         });
-                        setRecordPreviewImg(book.cover_url || null);
                         setShowRecordBook(true);
                       }}
                       className="p-1.5 rounded hover:bg-muted transition-all duration-200 hover:scale-110" title="Record"
@@ -223,23 +201,17 @@ const Books = () => {
             <DialogDescription>Add a new book to the library collection.</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
-            {/* Image Upload */}
+            {/* Cover Image URL */}
             <div className="space-y-2">
-              <Label>Book Cover</Label>
-              <div
-                onClick={() => fileRef.current?.click()}
-                className="border-2 border-dashed rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer hover:border-foreground/40 transition-colors duration-200 h-32"
-              >
-                {previewImg ? (
-                  <img src={previewImg} alt="Preview" className="h-full object-contain rounded" />
-                ) : (
-                  <>
-                    <ImagePlus className="h-8 w-8 text-muted-foreground mb-2" />
-                    <p className="text-xs text-muted-foreground">Click to upload cover image</p>
-                  </>
-                )}
-              </div>
-              <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, 'add')} />
+              <Label className="flex items-center gap-1.5"><Link className="h-3.5 w-3.5" /> Cover Image URL</Label>
+              <Input
+                placeholder="https://example.com/book-cover.jpg"
+                value={newBook.cover_url}
+                onChange={(e) => setNewBook(p => ({ ...p, cover_url: e.target.value }))}
+              />
+              {newBook.cover_url && (
+                <img src={newBook.cover_url} alt="Preview" className="h-24 object-contain rounded border" onError={(e) => (e.currentTarget.style.display = 'none')} />
+              )}
             </div>
             <div className="space-y-2">
               <Label>Book Title *</Label>
@@ -331,21 +303,15 @@ const Books = () => {
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label>Book Cover</Label>
-              <div
-                onClick={() => recordFileRef.current?.click()}
-                className="border-2 border-dashed rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer hover:border-foreground/40 transition-colors duration-200 h-32"
-              >
-                {recordPreviewImg ? (
-                  <img src={recordPreviewImg} alt="Preview" className="h-full object-contain rounded" />
-                ) : (
-                  <>
-                    <ImagePlus className="h-8 w-8 text-muted-foreground mb-2" />
-                    <p className="text-xs text-muted-foreground">Click to upload cover image</p>
-                  </>
-                )}
-              </div>
-              <input ref={recordFileRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, 'record')} />
+              <Label className="flex items-center gap-1.5"><Link className="h-3.5 w-3.5" /> Cover Image URL</Label>
+              <Input
+                placeholder="https://example.com/book-cover.jpg"
+                value={recordForm.cover_url}
+                onChange={(e) => setRecordForm(p => ({ ...p, cover_url: e.target.value }))}
+              />
+              {recordForm.cover_url && (
+                <img src={recordForm.cover_url} alt="Preview" className="h-24 object-contain rounded border" onError={(e) => (e.currentTarget.style.display = 'none')} />
+              )}
             </div>
             <div className="space-y-2">
               <Label>Book Title *</Label>
