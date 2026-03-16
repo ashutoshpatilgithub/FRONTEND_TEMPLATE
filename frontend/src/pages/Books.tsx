@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLibrary } from '@/contexts/LibraryContext';
 import { Navigate } from 'react-router-dom';
@@ -19,7 +19,7 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Plus, BookOpen, FileEdit, Search, Trash2, Link } from 'lucide-react';
+import { Plus, BookOpen, FileEdit, Search, Trash2, Link, Upload } from 'lucide-react';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { BOOK_CATEGORIES } from '@/types';
@@ -35,6 +35,27 @@ const Books = () => {
 
   const [newBook, setNewBook] = useState({ title: '', author: '', price: '', quantity: '', description: '', genre: '', cover_url: '' });
   const [recordForm, setRecordForm] = useState({ title: '', author: '', price: '', quantity: '', description: '', genre: '', cover_url: '' });
+  const addFileRef = useRef<HTMLInputElement>(null);
+  const recordFileRef = useRef<HTMLInputElement>(null);
+
+  // Compress image to max 400px wide, 70% quality — keeps uploads fast
+  const compressImage = (file: File, onDone: (url: string) => void) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const MAX = 400;
+        const scale = img.width > MAX ? MAX / img.width : 1;
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width * scale;
+        canvas.height = img.height * scale;
+        canvas.getContext('2d')!.drawImage(img, 0, 0, canvas.width, canvas.height);
+        onDone(canvas.toDataURL('image/jpeg', 0.7));
+      };
+      img.src = e.target!.result as string;
+    };
+    reader.readAsDataURL(file);
+  };
 
   if (user?.role !== 'librarian') {
     return <Navigate to="/catalog" replace />;
@@ -201,14 +222,36 @@ const Books = () => {
             <DialogDescription>Add a new book to the library collection.</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
-            {/* Cover Image URL */}
+            {/* Cover Image */}
             <div className="space-y-2">
-              <Label className="flex items-center gap-1.5"><Link className="h-3.5 w-3.5" /> Cover Image URL</Label>
-              <Input
-                placeholder="https://example.com/book-cover.jpg"
-                value={newBook.cover_url}
-                onChange={(e) => setNewBook(p => ({ ...p, cover_url: e.target.value }))}
-              />
+              <Label className="flex items-center gap-1.5"><Link className="h-3.5 w-3.5" /> Cover Image</Label>
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Paste image URL here..."
+                  value={newBook.cover_url.startsWith('data:') ? '' : newBook.cover_url}
+                  onChange={(e) => setNewBook(p => ({ ...p, cover_url: e.target.value }))}
+                  className="flex-1"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="shrink-0 gap-1.5"
+                  onClick={() => addFileRef.current?.click()}
+                >
+                  <Upload className="h-3.5 w-3.5" /> Browse
+                </Button>
+                <input
+                  ref={addFileRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) compressImage(file, (url) => setNewBook(p => ({ ...p, cover_url: url })));
+                    e.target.value = '';
+                  }}
+                />
+              </div>
               {newBook.cover_url && (
                 <img src={newBook.cover_url} alt="Preview" className="h-24 object-contain rounded border" onError={(e) => (e.currentTarget.style.display = 'none')} />
               )}
@@ -303,12 +346,34 @@ const Books = () => {
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label className="flex items-center gap-1.5"><Link className="h-3.5 w-3.5" /> Cover Image URL</Label>
-              <Input
-                placeholder="https://example.com/book-cover.jpg"
-                value={recordForm.cover_url}
-                onChange={(e) => setRecordForm(p => ({ ...p, cover_url: e.target.value }))}
-              />
+              <Label className="flex items-center gap-1.5"><Link className="h-3.5 w-3.5" /> Cover Image</Label>
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Paste image URL here..."
+                  value={recordForm.cover_url.startsWith('data:') ? '' : recordForm.cover_url}
+                  onChange={(e) => setRecordForm(p => ({ ...p, cover_url: e.target.value }))}
+                  className="flex-1"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="shrink-0 gap-1.5"
+                  onClick={() => recordFileRef.current?.click()}
+                >
+                  <Upload className="h-3.5 w-3.5" /> Browse
+                </Button>
+                <input
+                  ref={recordFileRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) compressImage(file, (url) => setRecordForm(p => ({ ...p, cover_url: url })));
+                    e.target.value = '';
+                  }}
+                />
+              </div>
               {recordForm.cover_url && (
                 <img src={recordForm.cover_url} alt="Preview" className="h-24 object-contain rounded border" onError={(e) => (e.currentTarget.style.display = 'none')} />
               )}
